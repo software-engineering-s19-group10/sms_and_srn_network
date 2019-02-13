@@ -1,11 +1,11 @@
 import sqlite3
-import os
 from haversine import haversine
 
 db_filename = 'database/srn.db'
 
 global db_conn
 global cursor
+
 
 def init_db():
     global db_conn
@@ -17,12 +17,12 @@ def init_db():
     cursor.execute('''USE database_name;''')
 
 
-
 # function to add stranger to database
-def report_stranger(lat, long, severity):
+def report_stranger(lat, long, severity=1):
     global cursor
     cursor.execute("INSERT INTO SRN (?,?,?);", lat, long, severity)
     return
+
 
 def send_closest_srn(lat_user, long_user):
     global cursor
