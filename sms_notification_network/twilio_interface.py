@@ -11,7 +11,12 @@ auth_token = 'your_auth_token'
 client = Client(account_sid, auth_token)
 twilio_number = '+15017122661'
 
+
+app = Flask(__name__)
+
+
 def send_text(content, dest):
+    content += " Reply STOP to stop SMS notifications."
     message = client.messages.create(
                               from_=twilio_number,
                               body=content,
@@ -21,6 +26,7 @@ def send_text(content, dest):
     print(message.sid)
 
 def send_mms(content, img_url, dest):
+    content += " Reply STOP to stop SMS notifications."
     message = client.messages.create(
                               body=content,
                               from_=twilio_number,
@@ -30,17 +36,25 @@ def send_mms(content, img_url, dest):
 
     print(message.sid)
 
-app = Flask(__name__)
-
-
 @app.route("/sms", methods=['GET', 'POST'])
-def sms_ahoy_reply():
+def sms():
     """Respond to incoming messages with a friendly SMS."""
+    # Get information about the
+    number = request.form['From']
+    message_body = request.form['Body']
+
+    if message_body == "STOP":
+        # do action to stop sms notifications for user
+        text = "You have unsubscribed from SMS notifications."
+    else:
+        text = "Invalid Response. Reply STOP to stop SMS notifications."
+
+
     # Start our response
     resp = MessagingResponse()
 
     # Add a message
-    resp.message("Ahoy! Thanks so much for your message.")
+    resp.message(text)
 
     return str(resp)
 
