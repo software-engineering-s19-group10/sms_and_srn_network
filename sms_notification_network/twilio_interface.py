@@ -5,11 +5,6 @@ from twilio.rest import Client
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 
-# Your Account Sid and Auth Token from twilio.com/console
-account_sid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-auth_token = 'your_auth_token'
-client = Client(account_sid, auth_token)
-twilio_number = '+15017122661'
 
 
 app = Flask(__name__)
