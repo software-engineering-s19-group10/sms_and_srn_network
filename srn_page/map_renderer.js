@@ -33,53 +33,64 @@ $(document).ready(function() {
             // initialize the map
             var map = initMap(lat, long);
         
-            // the api url to get data
-            let dataURL = "http://localhost:8000/lock_owners/api/srn/?format=json";
 
-            $.getJSON(dataURL, 
-                // function to parse and display
-                function(res) {
-                    // parse to JSON
-                    var resArr = jQuery.parseJSON(res);
-        
-                    // create the circles for the heatmap
-                    function getCircle(magnitude) {
-                        return {
-                          path: google.maps.SymbolPath.CIRCLE,
-                          fillColor: 'red',
-                          fillOpacity: .2,
-                          scale: Math.pow(2, magnitude) / 2,
-                          strokeColor: 'white',
-                          strokeWeight: .5
-                        };
-                    }
-        
-                    function eqfeed_callback(results) {
-                        map.data.addGeoJson(results);
-                    }
-        
-                    var heatmapDat = [];
-                    
-                    /* Data points defined as an array of LatLng objects */
-                    for(let i = 0; i < resArr.length; i++) {
-                        heatmapDat.push(new google.maps.LatLng(resArr[i]["latitude"], resArr[i]["longitude"]))
-                    }           
-        
-                    var place = new google.maps.LatLng(lat, long);
-        
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: place,
-                        zoom: 13,
-                        mapTypeId: 'satellite'
-                    });
-        
-                    var heatmap = new google.maps.visualization.HeatmapLayer({
-                        data: heatmapDat
-                    });
-        
-                    heatmap.setMap(map);
+            function heatmapRenderer(resData) {
+                // we make a successful JSONP call!
+                console.log(resData);
+                // parse to JSON
+                var resArr = jQuery.parseJSON(resData);
+    
+                // create the circles for the heatmap
+                function getCircle(magnitude) {
+                    return {
+                      path: google.maps.SymbolPath.CIRCLE,
+                      fillColor: 'red',
+                      fillOpacity: .2,
+                      scale: Math.pow(2, magnitude) / 2,
+                      strokeColor: 'white',
+                      strokeWeight: .5
+                    };
                 }
-            )
+    
+                var heatmapDat = [];
+                
+                /* Data points defined as an array of LatLng objects */
+                for(let i = 0; i < resArr.length; i++) {
+                    heatmapDat.push(new google.maps.LatLng(resArr[i]["latitude"], resArr[i]["longitude"]))
+                }           
+    
+                var place = new google.maps.LatLng(lat, long);
+    
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: place,
+                    zoom: 13,
+                    mapTypeId: 'terrain'
+                });
+    
+                var heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: heatmapDat
+                });
+    
+                heatmap.setMap(map);
+            }
+
+            // the api url to get data
+            // replace this with whatever we use
+            let dataURL = "http://771d8f84.ngrok.io/lock_owners/api/srn/";
+            
+            $.ajax({
+                url: dataURL,
+                dataType: 'text',
+                type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(data){
+                    console.log(data);
+                    heatmapRenderer(data);
+                },
+                error: function() {
+                    console.log("ERROR");
+                }
+              }); 
         }
     );
 })
