@@ -2,7 +2,7 @@
 $(document).ready(function() {
     // URL to get the geolocation parameters of the user. We don't
     // have to deal with permissions this way.
-    let geoipURL = "http://api.ipstack.com/check?access_key=7fdd0c524e76bc908f8b11b56d76e887&format=1";
+    let geoipURL = "https://api.ipgeolocation.io/ipgeo?apiKey=a359c0ed992141c78a4d359c5f77aab6";
 
     // get the corresponding json with geolocation
     $.getJSON(geoipURL, 
@@ -46,9 +46,9 @@ $(document).ready(function() {
                       path: google.maps.SymbolPath.CIRCLE,
                       fillColor: 'red',
                       fillOpacity: .2,
-                      scale: Math.pow(2, magnitude) / 2,
+                      scale: Math.pow(4, magnitude) / 2,
                       strokeColor: 'white',
-                      strokeWeight: .5
+                      strokeWeight: .8
                     };
                 }
     
@@ -64,7 +64,7 @@ $(document).ready(function() {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: place,
                     zoom: 13,
-                    mapTypeId: 'terrain'
+                    mapTypeId: google.maps.MapTypeId.HYBRID
                 });
     
                 var heatmap = new google.maps.visualization.HeatmapLayer({
@@ -76,7 +76,7 @@ $(document).ready(function() {
 
             // the api url to get data
             // replace this with whatever we use
-            let dataURL = "http://771d8f84.ngrok.io/lock_owners/api/srn/";
+            let dataURL = "https://b8cf0f93.ngrok.io/lock_owners/api/srn/";
             
             $.ajax({
                 url: dataURL,
@@ -87,8 +87,8 @@ $(document).ready(function() {
                     console.log(data);
                     heatmapRenderer(data);
                 },
-                error: function() {
-                    console.log("ERROR");
+                error: function(jqXHR, textStatus, ex) {
+                    //console.log(textStatus + "," + ex + "," + jqXHR.responseText);
                 }
               }); 
         }
