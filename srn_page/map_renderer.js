@@ -88,7 +88,7 @@ $(document).ready(function() {
                     heatmapRenderer(data);
                 },
                 error: function(jqXHR, textStatus, ex) {
-                    //console.log(textStatus + "," + ex + "," + jqXHR.responseText);
+                    console.log(textStatus + "," + ex + "," + jqXHR.responseText);
                 }
               }); 
         }
